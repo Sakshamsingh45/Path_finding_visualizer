@@ -10,7 +10,7 @@ The goal of this project was to keep the architecture as close as possible to a 
 Live Demo:
 
 ```
-https://yourusername.github.io/pathfinder-website/
+https://Sakshamsingh45.github.io/Path_finding_visualizer/
 ```
 
 ---

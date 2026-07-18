@@ -1,86 +1,226 @@
-# Pathfinder — Grid Traversal Lab (static, no server)
+# 🧭 Pathfinder — Grid Traversal Lab
 
-An interactive pathfinding visualizer that's just **4 static files** —
-`index.html`, `style.css`, `script.js`, `algorithms.py` — with no backend to
-run or deploy. The BFS / DFS / Dijkstra / A* implementations are real Python,
-but they execute *inside the visitor's browser* via
-[Pyodide](https://pyodide.org) (CPython compiled to WebAssembly). You can
-drag this folder onto any static host and it works immediately.
+An interactive pathfinding visualizer that runs **real Python algorithms directly in the browser** using **Pyodide (CPython compiled to WebAssembly)**. The project combines a modern JavaScript interface with Python implementations of classic graph traversal algorithms, allowing users to explore and compare their behavior without requiring any backend server.
 
-## How it fits together
+The goal of this project was to keep the architecture as close as possible to a traditional Python application while making it completely client-side. Instead of rewriting the algorithms in JavaScript, the original Python code executes inside the browser, making the project an interesting demonstration of WebAssembly and Pyodide.
 
-- `algorithms.py` — the four search algorithms, plus a `solve()` function
-  at the bottom that takes a JSON string and returns a JSON string. This is
-  the same file a "real" backend would run; it just never touches a server.
-- `script.js` — builds the grid, handles wall drawing and dragging the
-  start/end nodes, and on page load calls `loadPyodide()` from the Pyodide
-  CDN script, fetches `algorithms.py` as plain text, and runs it inside that
-  Python runtime. When you click **run traversal**, it calls the Python
-  `solve()` function directly (`pySolve(JSON.stringify(payload))`) and
-  animates the JSON it gets back.
-- `index.html` / `style.css` — the page and the dark control-room theme.
+---
+# 🎮 Demo
 
-The first page load takes a few seconds longer than a normal static page,
-since the browser has to download the Python runtime (~10 MB, cached by the
-browser after that). The status indicator in the top bar shows "loading
-python runtime…" during that window and the **run traversal** button stays
-disabled until it's ready.
+Live Demo:
 
-## Running it locally
-
-Because `script.js` fetches `algorithms.py` with `fetch()`, opening
-`index.html` directly via `file://` won't work (browsers block that kind of
-local fetch). Serve the folder over plain HTTP instead — any static server
-works, for example:
-
-```bash
-cd pathfinder-website
-python3 -m http.server 8000
+```
+https://yourusername.github.io/pathfinder-website/
 ```
 
-Then open **http://localhost:8000**.
+---
 
-## Publishing it online
+## ✨ Features
 
-Since there's no backend, any static host works. A few options:
+- 🚀 **100% Static Website** — deploy anywhere (GitHub Pages, Netlify, Vercel, etc.)
+- 🐍 **Real Python Algorithms** executed in-browser with **Pyodide**
+- 🎯 Interactive grid with draggable start/end nodes
+- 🧱 Draw and erase walls with click & drag
+- ⚡ Adjustable animation speed
+- 📊 Live diagnostics (visited nodes, path length, execution time)
+- 🌐 No backend, database, or server required after hosting
 
-**GitHub Pages**
-1. Push this folder to a GitHub repo.
-2. Repo Settings → Pages → set the source branch/folder.
-3. Your site is live at `https://<username>.github.io/<repo>`.
+---
 
-**Netlify**
-1. Go to [app.netlify.com/drop](https://app.netlify.com/drop).
-2. Drag the `pathfinder-website` folder onto the page.
-3. It deploys instantly with a live URL.
+# Algorithms Implemented
 
-**Vercel**
-```bash
-npm i -g vercel
-cd pathfinder-website
-vercel
+## Breadth-First Search (BFS)
+
+Breadth-First Search explores nodes level by level using a queue. Since every move has equal cost on the grid, BFS always discovers the shortest possible path.
+
+**Characteristics**
+
+- Shortest path guaranteed
+- Queue-based traversal
+- Ideal for unweighted graphs
+
+**Complexity**
+
+- Time: **O(V + E)**
+- Space: **O(V)**
+
+---
+
+## Depth-First Search (DFS)
+
+Depth-First Search explores one branch completely before backtracking. Although it is efficient for traversal, it does not guarantee the shortest route.
+
+**Characteristics**
+
+- Uses a stack
+- Deep exploration
+- Fast traversal
+- No shortest-path guarantee
+
+**Complexity**
+
+- Time: **O(V + E)**
+- Space: **O(V)**
+
+---
+
+## Dijkstra's Algorithm
+
+Dijkstra's algorithm expands nodes according to their minimum known distance from the source. It guarantees the optimal path and forms the basis for many shortest-path applications.
+
+**Characteristics**
+
+- Priority Queue (Min Heap)
+- Guaranteed shortest path
+- Suitable for weighted graphs
+
+**Complexity**
+
+- Time: **O((V + E) log V)**
+- Space: **O(V)**
+
+---
+
+## A* Search
+
+A* enhances Dijkstra's algorithm by introducing a heuristic function that estimates the remaining distance to the destination.
+
+This implementation uses the Manhattan Distance heuristic:
+
+```
+f(n) = g(n) + h(n)
 ```
 
-No build step, no environment variables, no server process to keep alive —
-it's the same 4 files everywhere.
+where
 
-## Algorithms
+- **g(n)** = distance traveled from the start
+- **h(n)** = Manhattan distance to the goal
 
-| Algorithm | Guarantees shortest path? | Notes |
-|---|---|---|
-| BFS | Yes | Level-order traversal via a queue, O(V+E) |
-| DFS | No | Explicit stack, dives deep before backtracking |
-| Dijkstra | Yes | Min-heap keyed on distance from start |
-| A* | Yes | Min-heap keyed on `g(n) + h(n)`, Manhattan-distance heuristic |
+Because of the heuristic, A* usually visits significantly fewer nodes than Dijkstra while still guaranteeing the shortest path.
 
-## Using it
+**Complexity**
 
-- **Drag** the green (start) or red (end) node to reposition it.
-- **Click and drag** on empty tiles to draw walls; switch to `erase` to
-  remove them.
-- Pick an algorithm, adjust speed, hit **run traversal**.
-- **generate maze** scatters random walls; **clear walls** / **reset board**
-  reset the grid.
-- The diagnostics panel reports nodes visited, path length, and how long the
-  in-browser Python call took — useful for comparing how many fewer nodes
-  A* touches versus Dijkstra on the same board.
+- Worst Case: **O((V + E) log V)**
+- Usually much faster in practice
+
+---
+
+# Project Structure
+
+```
+Pathfinder/
+│
+├── index.html
+├── style.css
+├── script.js
+├── algorithms.py
+└── README.md
+```
+
+---
+
+# Architecture
+
+The application follows a simple client-side workflow.
+
+```
+User Interaction
+        │
+        ▼
+ JavaScript Interface
+        │
+        ▼
+ JSON Request
+        │
+        ▼
+ Pyodide Runtime
+        │
+        ▼
+ algorithms.py
+        │
+        ▼
+ JSON Response
+        │
+        ▼
+ Animation Engine
+```
+
+The browser loads the Pyodide runtime once, executes the Python code directly inside WebAssembly, and returns the computed traversal data back to JavaScript for animation.
+
+---
+
+# Technologies Used
+
+- HTML5
+- CSS3
+- JavaScript (ES6)
+- Python
+- Pyodide
+- WebAssembly
+- JSON
+
+---
+
+# User Interaction
+
+The application supports an interactive workflow:
+
+- Drag the green node to change the starting position.
+- Drag the red node to change the destination.
+- Click and drag on empty cells to create walls.
+- Switch to erase mode to remove walls.
+- Select any supported algorithm.
+- Adjust animation speed.
+- Generate random mazes.
+- Run the traversal visualization.
+- Compare algorithm performance using the diagnostics panel.
+
+---
+
+# What Makes This Project Different?
+
+Most browser-based pathfinding visualizers either:
+
+- implement every algorithm in JavaScript, or
+- rely on a backend server to execute Python code.
+
+This project takes a different approach.
+
+The exact Python implementations run directly inside the browser using **Pyodide**, allowing the project to preserve Python code while remaining completely client-side.
+
+This means there is:
+
+- No backend server
+- No API endpoints
+- No Flask or Django
+- No Node.js server
+- No database
+
+Only static files and an in-browser Python runtime.
+
+---
+
+# Learning Outcomes
+
+This project provided practical experience with:
+
+- Graph traversal algorithms
+- Pathfinding heuristics
+- Python and JavaScript interoperability
+- WebAssembly
+- Pyodide
+- Browser runtime execution
+- Interactive UI design
+- Animation techniques
+- JSON communication between Python and JavaScript
+
+---
+
+
+## Author
+
+**Saksham Singh**
+
+GitHub: https://github.com/sakshamsingh45
+
+If you found this project interesting, consider leaving a ⭐ on the repository.

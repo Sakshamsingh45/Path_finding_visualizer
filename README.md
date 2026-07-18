@@ -119,35 +119,6 @@ Pathfinder/
 
 ---
 
-# Architecture
-
-The application follows a simple client-side workflow.
-
-```
-User Interaction
-        │
-        ▼
- JavaScript Interface
-        │
-        ▼
- JSON Request
-        │
-        ▼
- Pyodide Runtime
-        │
-        ▼
- algorithms.py
-        │
-        ▼
- JSON Response
-        │
-        ▼
- Animation Engine
-```
-
-The browser loads the Pyodide runtime once, executes the Python code directly inside WebAssembly, and returns the computed traversal data back to JavaScript for animation.
-
----
 
 # Technologies Used
 
@@ -155,9 +126,6 @@ The browser loads the Pyodide runtime once, executes the Python code directly in
 - CSS3
 - JavaScript (ES6)
 - Python
-- Pyodide
-- WebAssembly
-- JSON
 
 ---
 

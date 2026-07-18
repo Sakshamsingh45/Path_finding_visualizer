@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>pathfinder :: grid traversal lab</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="style.css" />
+<script src="https://cdn.jsdelivr.net/pyodide/v0.26.4/full/pyodide.js"></script>
+</head>
+<body>
+
+  <div class="scanline"></div>
+
+  <header class="topbar">
+    <div class="brand">
+      <span class="brand-prompt">pathfinder://</span>
+      <span class="brand-sub">grid traversal lab</span>
+    </div>
+    <div class="status" id="status">
+      <span class="status-dot" id="statusDot"></span>
+      <span id="statusText">loading python runtime…</span>
+    </div>
+  </header>
+
+  <main class="layout">
+
+    <aside class="panel controls">
+
+      <div class="control-block">
+        <h2 class="block-title">01 — algorithm</h2>
+        <div class="algo-tabs" id="algoTabs">
+          <button class="algo-tab active" data-algo="bfs">
+            <span class="algo-name">BFS</span>
+            <span class="algo-desc">shortest path, unweighted</span>
+          </button>
+          <button class="algo-tab" data-algo="dfs">
+            <span class="algo-name">DFS</span>
+            <span class="algo-desc">deep dive, no guarantee</span>
+          </button>
+          <button class="algo-tab" data-algo="dijkstra">
+            <span class="algo-name">Dijkstra</span>
+            <span class="algo-desc">cost-ordered search</span>
+          </button>
+          <button class="algo-tab" data-algo="astar">
+            <span class="algo-name">A*</span>
+            <span class="algo-desc">heuristic-guided</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="control-block">
+        <h2 class="block-title">02 — tools</h2>
+        <div class="tool-row">
+          <button class="tool-btn active" data-tool="wall" title="Draw walls">wall</button>
+          <button class="tool-btn" data-tool="erase" title="Erase walls">erase</button>
+        </div>
+        <p class="hint">drag <b>start</b> / <b>end</b> nodes directly. click + drag on empty tiles to place walls.</p>
+      </div>
+
+      <div class="control-block">
+        <h2 class="block-title">03 — speed</h2>
+        <input type="range" id="speedSlider" min="1" max="4" value="2" step="1" class="slider" />
+        <div class="speed-labels">
+          <span>slow</span><span>fast</span>
+        </div>
+      </div>
+
+      <div class="control-block actions">
+        <button class="btn btn-primary" id="visualizeBtn" disabled>
+          <span>run traversal</span>
+        </button>
+        <button class="btn btn-ghost" id="clearWallsBtn">clear walls</button>
+        <button class="btn btn-ghost" id="clearBoardBtn">reset board</button>
+        <button class="btn btn-ghost" id="mazeBtn">generate maze</button>
+      </div>
+
+    </aside>
+
+    <section class="board-wrap">
+      <div class="grid" id="grid"></div>
+    </section>
+
+    <aside class="panel readout">
+      <h2 class="block-title">diagnostics</h2>
+      <div class="readout-row">
+        <span class="readout-label">algorithm</span>
+        <span class="readout-value" id="readoutAlgo">bfs</span>
+      </div>
+      <div class="readout-row">
+        <span class="readout-label">nodes visited</span>
+        <span class="readout-value" id="readoutVisited">—</span>
+      </div>
+      <div class="readout-row">
+        <span class="readout-label">path length</span>
+        <span class="readout-value" id="readoutPath">—</span>
+      </div>
+      <div class="readout-row">
+        <span class="readout-label">path found</span>
+        <span class="readout-value" id="readoutFound">—</span>
+      </div>
+      <div class="readout-row">
+        <span class="readout-label">server time</span>
+        <span class="readout-value" id="readoutTime">—</span>
+      </div>
+
+      <div class="legend">
+        <div class="legend-item"><span class="swatch swatch-start"></span> start</div>
+        <div class="legend-item"><span class="swatch swatch-end"></span> end</div>
+        <div class="legend-item"><span class="swatch swatch-wall"></span> wall</div>
+        <div class="legend-item"><span class="swatch swatch-visited"></span> visited</div>
+        <div class="legend-item"><span class="swatch swatch-path"></span> path</div>
+      </div>
+    </aside>
+
+  </main>
+
+  <footer class="foot">
+    <span>algorithms: python (bfs · dfs · dijkstra · a*), run in-browser via pyodide</span>
+    <span>ui: html · css · vanilla js — no server</span>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
